@@ -1,4 +1,4 @@
-package br.com.crudmongo;
+package br.com.crudmongo.utils;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
