@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        try (MongoClient cliente = MongoClients.create("mongodb+srv://kaikemanuel39:658926250821@cluster0.mbrdi.mongodb.net/")) {
+        try (MongoClient cliente = MongoClients.create("banco_url")) {
             MongoDatabase banco = cliente.getDatabase("Cluster0");
             TaskRepository repositorio = new TaskRepository(banco);
 
