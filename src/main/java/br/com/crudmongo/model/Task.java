@@ -1,5 +1,6 @@
 package br.com.crudmongo.model;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 public class Task {
@@ -9,6 +10,13 @@ public class Task {
     private boolean status;
 
     public Task(String title, String description, boolean status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Task(ObjectId id, String title, String description, boolean status) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
@@ -26,8 +34,8 @@ public class Task {
         return title;
     }
 
-    public void setTitle(String titulo) {
-        this.title = titulo;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -46,12 +54,22 @@ public class Task {
         this.status = status;
     }
 
+    public Document toDocument() {
+        Document doc = new Document("title", title)
+                .append("description", description)
+                .append("concluida", status);
+        if (id != null) {
+            doc.append("_id", id);
+        }
+        return doc;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
                 "id=" + id +
-                ", titulo='" + title + '\'' +
-                ", descricao='" + description + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
                 ", status=" + status +
                 '}';
     }

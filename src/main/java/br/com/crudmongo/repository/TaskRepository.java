@@ -18,33 +18,42 @@ public class TaskRepository {
     }
 
     public void saveTask(Task task) {
-        Document doc = new Document("titulo", task.getTitle())
-                .append("descricao", task.getDescription())
-                .append("concluida", task.isStatus());
-
+        Document doc = task.toDocument();
         collection.insertOne(doc);
         System.out.println("Tarefa criada!");
     }
 
-    public List<Task> listarTarefas() {
+    public List<Task> listTasks() {
         List<Task> lista = new ArrayList<>();
         for (Document doc : collection.find()) {
             lista.add(new Task(
-                    doc.getString("titulo"),
-                    doc.getString("descricao"),
+                    doc.getObjectId("_id"),
+                    doc.getString("title"),
+                    doc.getString("description"),
                     doc.getBoolean("concluida")
             ));
         }
         return lista;
     }
 
+    public Task findById(ObjectId id) {
+        Document doc = collection.find(Filters.eq("_id", id)).first();
+        return (doc != null) ? new Task(
+                doc.getObjectId("_id"),
+                doc.getString("title"),
+                doc.getString("description"),
+                doc.getBoolean("concluida")
+        ) : null;
+    }
+
     public void updateTask(ObjectId id, boolean status) {
-        collection.updateOne(Filters.eq("_id", id), new Document("$set",  new Document("status", status)));
-        System.out.println("Task updated!");
+        collection.updateOne(Filters.eq("_id", id),
+                new Document("$set", new Document("concluida", status)));
+        System.out.println("Tarefa atualizada!");
     }
 
     public void deleteTask(ObjectId id) {
         collection.deleteOne(Filters.eq("_id", id));
-        System.out.println("Task deleted!");
+        System.out.println("Tarefa excluída!");
     }
 }
